@@ -43,3 +43,7 @@ public:
 
 } // namespace interface
 } // namespace gpio
+
+#include <memory>
+
+using IPinPtr = std::unique_ptr<gpio::interface::IPin>;
