@@ -50,8 +50,7 @@ InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_n
 PinLevel InputPin::getLevel() const
 {
     auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
-
-    auto pinLevel = static_cast<PinLevel>(gpioLevel);
+    auto const pinLevel = static_cast<PinLevel>(gpioLevel);
 
     return pinLevel;
 }
