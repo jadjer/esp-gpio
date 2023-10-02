@@ -19,9 +19,11 @@
 
 #pragma once
 
+
 #include <cstdlib>
 
-#include "gpio/interface/IPin.hpp"
+#include "gpio/PinLevel.hpp"
+#include "gpio/interface/IOutputPin.hpp"
 
 /**
  * @namespace gpio
@@ -33,13 +35,12 @@ namespace gpio
  * @class Pin
  * @brief
  */
-class Pin : public interface::IPin
+class OutputPin : public interface::IOutputPin<PinLevel>
 {
 public:
-    explicit Pin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
+    explicit OutputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
 
 public:
-    [[nodiscard]] PinLevel getLevel() const override;
     void setLevel(PinLevel value) override;
 
 private:

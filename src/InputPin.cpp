@@ -17,7 +17,7 @@
 // Created by jadjer on 30.08.22.
 //
 
-#include "gpio/Pin.hpp"
+#include "gpio/InputPin.hpp"
 
 #include <cassert>
 
@@ -26,14 +26,14 @@
 namespace gpio
 {
 
-Pin::Pin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin)
+InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin)
 {
     assert(PIN_LEVEL_LOW == 0);
     assert(PIN_LEVEL_HIGH == 1);
 
     gpio_config_t gpioConfig = {
         .pin_bit_mask = (1ull << m_numberOfPin),
-        .mode = GPIO_MODE_INPUT_OUTPUT,
+        .mode = GPIO_MODE_INPUT,
         .pull_up_en = GPIO_PULLUP_DISABLE,
         .pull_down_en = GPIO_PULLDOWN_ENABLE,
         .intr_type = GPIO_INTR_DISABLE,
@@ -44,21 +44,16 @@ Pin::Pin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin
         gpioConfig.pull_down_en = GPIO_PULLDOWN_DISABLE;
     }
 
-    gpio_config(&gpioConfig);
+    ESP_ERROR_CHECK(gpio_config(&gpioConfig));
 }
 
-PinLevel Pin::getLevel() const
+PinLevel InputPin::getLevel() const
 {
     auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
 
     auto pinLevel = static_cast<PinLevel>(gpioLevel);
 
     return pinLevel;
-}
-
-void Pin::setLevel(PinLevel value)
-{
-    ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), value));
 }
 
 } // namespace gpio
