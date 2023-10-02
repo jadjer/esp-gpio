@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 
 set(SOURCES
-        src/Pin.cpp)
+        src/InputPin.cpp
+        src/OutputPin.cpp)
 
 set(COMPONENTS
         driver)

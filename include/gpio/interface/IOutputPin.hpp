@@ -14,36 +14,28 @@
 //
 
 //
-// Created by jadjer on 29.09.23.
+// Created by jadjer on 02.10.23.
 //
 
 #pragma once
 
-namespace gpio
+
+namespace gpio::interface
 {
 
-enum PinLevel
-{
-    PIN_LEVEL_LOW = 0,
-    PIN_LEVEL_HIGH = 1
-};
-
-namespace interface
-{
-
-class IPin
+template<class T>
+class IOutputPin
 {
 public:
-    virtual ~IPin() = default;
+    virtual ~IOutputPin() = default;
 
 public:
-    [[nodiscard]] virtual PinLevel getLevel() const = 0;
-    virtual void setLevel(PinLevel value) = 0;
+    virtual void setLevel(T value) = 0;
 };
 
-} // namespace interface
-} // namespace gpio
+} // namespace gpio::interface
 
 #include <memory>
 
-using IPinPtr = std::unique_ptr<gpio::interface::IPin>;
+template<class T>
+using IOutputPinPtr = std::unique_ptr<gpio::interface::IOutputPin<T>>;
