@@ -3,5 +3,5 @@
 ## Install
 
 ```
-git submodule add https://github.com/jadjer/esp-gpio.git components/gpio
+git submodule add https://github.com/jadjer/esp32-gpio.git components/esp32-gpio
 ```
