@@ -25,6 +25,7 @@ namespace gpio
 
 enum PinLevel
 {
+    PIN_LEVEL_UNKNOWN = -1,
     PIN_LEVEL_LOW = 0,
     PIN_LEVEL_HIGH = 1
 };
