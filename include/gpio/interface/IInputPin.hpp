@@ -1,4 +1,4 @@
-// Copyright 2023 Pavel Suprunov
+// Copyright 2024 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,21 +19,19 @@
 
 #pragma once
 
-
-namespace gpio::interface
-{
+namespace gpio::interface {
 
 template<class T>
-class IInputPin
-{
+class IInputPin {
 public:
-    virtual ~IInputPin() = default;
+  virtual ~IInputPin() = default;
 
 public:
-    [[nodiscard]] virtual T getLevel() const = 0;
+  [[nodiscard]] virtual T getLevel() const = 0;
+  [[nodiscard]] virtual T readLevel() const = 0;
 };
 
-} // namespace gpio::interface
+}
 
 #include <memory>
 
