@@ -1,4 +1,4 @@
-// Copyright 2023 Pavel Suprunov
+// Copyright 2024 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 
 #pragma once
 
-
 #include <cstdlib>
 
 #include "gpio/PinLevel.hpp"
@@ -28,23 +27,22 @@
 /**
  * @namespace gpio
  */
-namespace gpio
-{
+namespace gpio {
 
 /**
  * @class Pin
  * @brief
  */
-class OutputPin : public interface::IOutputPin<PinLevel>
-{
+class OutputPin : public interface::IOutputPin<PinLevel> {
 public:
-    explicit OutputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
+  explicit OutputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
+  ~OutputPin() override = default;
 
 public:
-    void setLevel(PinLevel value) override;
+  void setLevel(PinLevel value) override;
 
 private:
-    uint8_t const m_numberOfPin;
+  uint8_t const m_numberOfPin;
 };
 
-} // namespace gpio
+}
