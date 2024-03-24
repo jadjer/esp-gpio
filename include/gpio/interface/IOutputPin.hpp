@@ -1,4 +1,4 @@
-// Copyright 2023 Pavel Suprunov
+// Copyright 2024 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,21 +19,18 @@
 
 #pragma once
 
-
-namespace gpio::interface
-{
+namespace gpio::interface {
 
 template<class T>
-class IOutputPin
-{
+class IOutputPin {
 public:
-    virtual ~IOutputPin() = default;
+  virtual ~IOutputPin() = default;
 
 public:
-    virtual void setLevel(T value) = 0;
+  virtual void setLevel(T value) = 0;
 };
 
-} // namespace gpio::interface
+}
 
 #include <memory>
 

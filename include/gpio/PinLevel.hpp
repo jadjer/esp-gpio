@@ -1,4 +1,4 @@
-// Copyright 2023 Pavel Suprunov
+// Copyright 2024 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,15 +19,12 @@
 
 #pragma once
 
+namespace gpio {
 
-namespace gpio
-{
-
-enum PinLevel
-{
-    PIN_LEVEL_UNKNOWN = -1,
-    PIN_LEVEL_LOW = 0,
-    PIN_LEVEL_HIGH = 1
+enum PinLevel {
+  PIN_LEVEL_UNKNOWN = -1,
+  PIN_LEVEL_LOW = 0,
+  PIN_LEVEL_HIGH = 1
 };
 
-} // namespace gpio
+}

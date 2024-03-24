@@ -1,4 +1,4 @@
-// Copyright 2023 Pavel Suprunov
+// Copyright 2024 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,38 +21,47 @@
 
 #include <cassert>
 
-#include "driver/gpio.h"
+#include <driver/gpio.h>
 
-namespace gpio
-{
+namespace gpio {
 
-InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin)
-{
-    assert(PIN_LEVEL_LOW == 0);
-    assert(PIN_LEVEL_HIGH == 1);
+InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin), m_level(PIN_LEVEL_UNKNOWN) {
+  assert(PIN_LEVEL_LOW == 0);
+  assert(PIN_LEVEL_HIGH == 1);
 
-    gpio_config_t gpioConfig = {
-        .pin_bit_mask = (1ull << m_numberOfPin),
-        .mode = GPIO_MODE_INPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_ENABLE,
-        .intr_type = GPIO_INTR_DISABLE,
-    };
+  gpio_config_t gpioConfig = {
+      .pin_bit_mask = (1ull << m_numberOfPin),
+      .mode = GPIO_MODE_INPUT,
+      .pull_up_en = GPIO_PULLUP_DISABLE,
+      .pull_down_en = GPIO_PULLDOWN_ENABLE,
+      .intr_type = GPIO_INTR_ANYEDGE,
+  };
 
-    if (defaultLevel == PIN_LEVEL_HIGH) {
-        gpioConfig.pull_up_en = GPIO_PULLUP_ENABLE;
-        gpioConfig.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    }
+  if (defaultLevel == PIN_LEVEL_HIGH) {
+    gpioConfig.pull_up_en = GPIO_PULLUP_ENABLE;
+    gpioConfig.pull_down_en = GPIO_PULLDOWN_DISABLE;
+  }
 
-    ESP_ERROR_CHECK(gpio_config(&gpioConfig));
+  gpio_config(&gpioConfig);
+  gpio_install_isr_service(0);
+  gpio_isr_handler_add(static_cast<gpio_num_t>(m_numberOfPin), InputPin::isr, this);
 }
 
-PinLevel InputPin::getLevel() const
-{
-    auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
-    auto const pinLevel = static_cast<PinLevel>(gpioLevel);
-
-    return pinLevel;
+PinLevel InputPin::getLevel() const {
+  return m_level;
 }
 
-} // namespace gpio
+PinLevel InputPin::readLevel() const {
+  auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
+  auto const pinLevel = static_cast<PinLevel>(gpioLevel);
+
+  return pinLevel;
+}
+
+void InputPin::isr(void *data) {
+  auto const inputPin = static_cast<InputPin *>(data);
+
+  inputPin->m_level = inputPin->readLevel();
+}
+
+}
