@@ -25,7 +25,7 @@
 
 namespace gpio {
 
-OutputPin::OutputPin(uint8_t const numberOfPin, PinLevel const startLevel) : m_numberOfPin(numberOfPin) {
+OutputPin::OutputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin) {
   assert(PIN_LEVEL_LOW == 0);
   assert(PIN_LEVEL_HIGH == 1);
 
@@ -38,7 +38,7 @@ OutputPin::OutputPin(uint8_t const numberOfPin, PinLevel const startLevel) : m_n
   };
 
   gpio_config(&gpioConfig);
-  gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), startLevel);
+  gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), defaultLevel);
 }
 
 void OutputPin::setLevel(PinLevel value) {
