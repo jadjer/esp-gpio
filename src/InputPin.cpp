@@ -45,6 +45,8 @@ InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_n
   gpio_config(&gpioConfig);
   gpio_install_isr_service(0);
   gpio_isr_handler_add(static_cast<gpio_num_t>(m_numberOfPin), InputPin::isr, this);
+
+  m_level = InputPin::readLevel();
 }
 
 PinLevel InputPin::getLevel() const {
