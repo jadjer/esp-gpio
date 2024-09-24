@@ -22,7 +22,7 @@
 #include <cstdlib>
 
 #include "gpio/PinLevel.hpp"
-#include "gpio/interface/IOutputPin.hpp"
+#include "gpio/interface/OutputPin.hpp"
 
 /**
  * @namespace gpio
@@ -33,7 +33,7 @@ namespace gpio {
  * @class Pin
  * @brief
  */
-class OutputPin : public interface::IOutputPin<PinLevel> {
+class OutputPin : public interface::OutputPin<PinLevel> {
 public:
   explicit OutputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
   ~OutputPin() override = default;
@@ -45,4 +45,4 @@ private:
   uint8_t const m_numberOfPin;
 };
 
-}
+}// namespace gpio

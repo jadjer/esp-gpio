@@ -22,7 +22,7 @@
 #include <cstdlib>
 
 #include "gpio/PinLevel.hpp"
-#include "gpio/interface/IInputPin.hpp"
+#include "gpio/interface/InputPin.hpp"
 
 /**
  * @namespace gpio
@@ -33,21 +33,33 @@ namespace gpio {
  * @class Pin
  * @brief
  */
-class InputPin : public interface::IInputPin<PinLevel> {
+class InputPin : public interface::InputPin<PinLevel> {
 public:
   explicit InputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
   ~InputPin() override = default;
 
 public:
   [[nodiscard]] PinLevel getLevel() const override;
-  [[nodiscard]] PinLevel readLevel() const override;
+  [[nodiscard]] uint64_t getCount() const override;
+  [[nodiscard]] uint64_t getDelay() const override;
+
+private:
+  [[nodiscard]] PinLevel readLevel() const;
+
+private:
+  static void isr(void *arg);
 
 private:
   uint8_t const m_numberOfPin;
+  PinLevel const m_defaultLevel;
+
+private:
   PinLevel m_level;
 
 private:
-  static void isr(void *data);
+  uint64_t m_count;
+  uint64_t m_delay;
+  uint64_t m_lastUpdate;
 };
 
-}
+}// namespace gpio

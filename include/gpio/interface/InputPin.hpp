@@ -19,15 +19,19 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace gpio::interface {
 
 template<class T>
-class IOutputPin {
+class InputPin {
 public:
-  virtual ~IOutputPin() = default;
+  virtual ~InputPin() = default;
 
 public:
-  virtual void setLevel(T value) = 0;
+  [[nodiscard]] virtual T getLevel() const = 0;
+  [[nodiscard]] virtual uint64_t getCount() const = 0;
+  [[nodiscard]] virtual uint64_t getDelay() const = 0;
 };
 
 }
@@ -35,4 +39,4 @@ public:
 #include <memory>
 
 template<class T>
-using IOutputPinPtr = std::unique_ptr<gpio::interface::IOutputPin<T>>;
+using InputPinPtr = std::unique_ptr<gpio::interface::InputPin<T>>;

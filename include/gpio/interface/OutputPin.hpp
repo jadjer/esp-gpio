@@ -22,13 +22,12 @@
 namespace gpio::interface {
 
 template<class T>
-class IInputPin {
+class OutputPin {
 public:
-  virtual ~IInputPin() = default;
+  virtual ~OutputPin() = default;
 
 public:
-  [[nodiscard]] virtual T getLevel() const = 0;
-  [[nodiscard]] virtual T readLevel() const = 0;
+  virtual void setLevel(T value) = 0;
 };
 
 }
@@ -36,4 +35,4 @@ public:
 #include <memory>
 
 template<class T>
-using IInputPinPtr = std::unique_ptr<gpio::interface::IInputPin<T>>;
+using OutputPinPtr = std::unique_ptr<gpio::interface::OutputPin<T>>;

@@ -22,10 +22,16 @@
 #include <cassert>
 
 #include <driver/gpio.h>
+#include <esp_timer.h>
 
 namespace gpio {
 
-InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin), m_level(PIN_LEVEL_UNKNOWN) {
+InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin),
+                                                                             m_defaultLevel(defaultLevel),
+                                                                             m_level(PIN_LEVEL_UNKNOWN),
+                                                                             m_count(0),
+                                                                             m_delay(0),
+                                                                             m_lastUpdate(0) {
   assert(PIN_LEVEL_LOW == 0);
   assert(PIN_LEVEL_HIGH == 1);
 
@@ -37,7 +43,7 @@ InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_n
       .intr_type = GPIO_INTR_ANYEDGE,
   };
 
-  if (defaultLevel == PIN_LEVEL_HIGH) {
+  if (m_defaultLevel == PIN_LEVEL_HIGH) {
     gpioConfig.pull_up_en = GPIO_PULLUP_ENABLE;
     gpioConfig.pull_down_en = GPIO_PULLDOWN_DISABLE;
   }
@@ -46,11 +52,19 @@ InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_n
   gpio_install_isr_service(0);
   gpio_isr_handler_add(static_cast<gpio_num_t>(m_numberOfPin), InputPin::isr, this);
 
-  m_level = InputPin::readLevel();
+  m_level = readLevel();
 }
 
 PinLevel InputPin::getLevel() const {
   return m_level;
+}
+
+uint64_t InputPin::getCount() const {
+  return m_count;
+}
+
+uint64_t InputPin::getDelay() const {
+  return m_delay;
 }
 
 PinLevel InputPin::readLevel() const {
@@ -60,10 +74,19 @@ PinLevel InputPin::readLevel() const {
   return pinLevel;
 }
 
-void InputPin::isr(void *data) {
-  auto const inputPin = static_cast<InputPin *>(data);
+void InputPin::isr(void *arg) {
+  auto const inputPin = static_cast<InputPin *>(arg);
 
   inputPin->m_level = inputPin->readLevel();
+
+  if (inputPin->m_level != inputPin->m_defaultLevel) {
+    inputPin->m_count += 1;
+
+    auto const currentTime = esp_timer_get_time();
+
+    inputPin->m_delay = currentTime - inputPin->m_lastUpdate;
+    inputPin->m_lastUpdate = currentTime;
+  }
 }
 
-}
+}// namespace gpio
