@@ -44,7 +44,7 @@ public:
   [[nodiscard]] uint64_t getDelay() const override;
 
 private:
-  [[nodiscard]] PinLevel readLevel() const;
+  void process();
 
 private:
   static void isr(void *arg);
@@ -58,7 +58,6 @@ private:
 
 private:
   uint64_t m_count;
-  uint64_t m_delay;
   uint64_t m_lastUpdate;
 };
 

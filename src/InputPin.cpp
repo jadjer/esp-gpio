@@ -30,7 +30,6 @@ InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_n
                                                                              m_defaultLevel(defaultLevel),
                                                                              m_level(PIN_LEVEL_UNKNOWN),
                                                                              m_count(0),
-                                                                             m_delay(0),
                                                                              m_lastUpdate(0) {
   assert(PIN_LEVEL_LOW == 0);
   assert(PIN_LEVEL_HIGH == 1);
@@ -52,7 +51,7 @@ InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_n
   gpio_install_isr_service(0);
   gpio_isr_handler_add(static_cast<gpio_num_t>(m_numberOfPin), InputPin::isr, this);
 
-  m_level = readLevel();
+  process();
 }
 
 PinLevel InputPin::getLevel() const {
@@ -64,29 +63,30 @@ uint64_t InputPin::getCount() const {
 }
 
 uint64_t InputPin::getDelay() const {
-  return m_delay;
+  auto const currentTime = esp_timer_get_time();
+  auto const delay = currentTime - m_lastUpdate;
+
+  return delay;
 }
 
-PinLevel InputPin::readLevel() const {
+void InputPin::process() {
   auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
-  auto const pinLevel = static_cast<PinLevel>(gpioLevel);
+  m_level = static_cast<PinLevel>(gpioLevel);
 
-  return pinLevel;
+  if (m_level == m_defaultLevel) {
+    return;
+  }
+
+  auto const currentTime = esp_timer_get_time();
+
+  m_count += 1;
+  m_lastUpdate = currentTime;
 }
 
 void InputPin::isr(void *arg) {
   auto const inputPin = static_cast<InputPin *>(arg);
 
-  inputPin->m_level = inputPin->readLevel();
-
-  if (inputPin->m_level != inputPin->m_defaultLevel) {
-    inputPin->m_count += 1;
-
-    auto const currentTime = esp_timer_get_time();
-
-    inputPin->m_delay = currentTime - inputPin->m_lastUpdate;
-    inputPin->m_lastUpdate = currentTime;
-  }
+  inputPin->process();
 }
 
 }// namespace gpio
