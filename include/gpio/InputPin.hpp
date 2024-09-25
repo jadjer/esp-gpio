@@ -58,7 +58,7 @@ private:
 
 private:
   uint64_t m_count;
-  uint64_t m_lastUpdate;
+  uint64_t m_lastUpdate_InMicroseconds;
 };
 
 }// namespace gpio
