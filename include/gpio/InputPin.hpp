@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cstdlib>
+#include <cstdint>
 
 #include "gpio/PinLevel.hpp"
 #include "gpio/interface/InputPin.hpp"
