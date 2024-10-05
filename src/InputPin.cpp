@@ -60,7 +60,7 @@ PinLevel InputPin::getLevel() const {
   return m_level;
 }
 
-uint64_t InputPin::getCount() const {
+std::uint32_t InputPin::getCount() const {
   return m_count;
 }
 
