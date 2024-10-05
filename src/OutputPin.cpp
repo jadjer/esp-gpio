@@ -32,8 +32,7 @@ OutputPin::OutputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel
 
   gpio_config_t gpioConfig = {
       .pin_bit_mask = (1ull << m_numberOfPin),
-//      .mode = GPIO_MODE_INPUT_OUTPUT,
-      .mode = GPIO_MODE_OUTPUT,
+      .mode = GPIO_MODE_INPUT_OUTPUT,
       .pull_up_en = GPIO_PULLUP_DISABLE,
       .pull_down_en = GPIO_PULLDOWN_ENABLE,
       .intr_type = GPIO_INTR_DISABLE,
