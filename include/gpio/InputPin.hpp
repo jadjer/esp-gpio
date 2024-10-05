@@ -50,8 +50,10 @@ private:
   static void isr(void *arg);
 
 private:
-  PinLevel const m_defaultLevel;
   std::uint8_t const m_numberOfPin;
+
+private:
+  PinLevel const m_defaultLevel;
 
 private:
   PinLevel m_level;
