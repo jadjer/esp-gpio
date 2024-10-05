@@ -27,10 +27,13 @@ public:
   virtual ~OutputPin() = default;
 
 public:
+  [[nodiscard]] virtual T getLevel() const = 0;
+
+public:
   virtual void setLevel(T value) = 0;
 };
 
-}
+}// namespace gpio::interface
 
 #include <memory>
 

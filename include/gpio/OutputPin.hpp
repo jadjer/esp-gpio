@@ -39,6 +39,9 @@ public:
   ~OutputPin() override = default;
 
 public:
+  [[nodiscard]] virtual PinLevel getLevel() const override;
+
+public:
   void setLevel(PinLevel value) override;
 
 private:

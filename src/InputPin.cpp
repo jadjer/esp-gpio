@@ -33,6 +33,7 @@ InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) 
                                                                                   m_level(PIN_LEVEL_UNKNOWN),
                                                                                   m_count(0),
                                                                                   m_lastUpdate_InMicroseconds(0) {
+
   assert(PIN_LEVEL_LOW == 0);
   assert(PIN_LEVEL_HIGH == 1);
 
