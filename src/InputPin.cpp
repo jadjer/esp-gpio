@@ -26,13 +26,13 @@
 
 namespace gpio {
 
-constexpr uint64_t const MINIMAL_PULSE_DELAY_MICROSECONDS = 10000; // 0.01 sec
+constexpr auto const MINIMAL_PULSE_DELAY_MICROSECONDS = 10000;// 0.01 sec
 
-InputPin::InputPin(uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin),
-                                                                             m_defaultLevel(defaultLevel),
-                                                                             m_level(PIN_LEVEL_UNKNOWN),
-                                                                             m_count(0),
-                                                                             m_lastUpdate_InMicroseconds(0) {
+InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin),
+                                                                                  m_defaultLevel(defaultLevel),
+                                                                                  m_level(PIN_LEVEL_UNKNOWN),
+                                                                                  m_count(0),
+                                                                                  m_lastUpdate_InMicroseconds(0) {
   assert(PIN_LEVEL_LOW == 0);
   assert(PIN_LEVEL_HIGH == 1);
 
@@ -64,22 +64,22 @@ uint64_t InputPin::getCount() const {
   return m_count;
 }
 
-uint64_t InputPin::getDelay() const {
-  uint64_t const currentTime_InMicroseconds = esp_timer_get_time();
-  uint64_t const delay_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate_InMicroseconds;
+std::uint32_t InputPin::getDelay() const {
+  auto const currentTime_InMicroseconds = esp_timer_get_time();
+  auto const delay_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate_InMicroseconds;
 
   return delay_InMicroseconds;
 }
 
 void InputPin::process() {
-  uint64_t const currentTime_InMicroseconds = esp_timer_get_time();
-  uint64_t const diffTime_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate_InMicroseconds;
+  auto const currentTime_InMicroseconds = esp_timer_get_time();
+  auto const diffTime_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate_InMicroseconds;
 
   if (diffTime_InMicroseconds <= MINIMAL_PULSE_DELAY_MICROSECONDS) {
     return;
   }
 
-  uint8_t const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
+  auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
 
   m_level = static_cast<PinLevel>(gpioLevel);
   if (m_level == m_defaultLevel) {

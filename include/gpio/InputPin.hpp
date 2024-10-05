@@ -35,13 +35,13 @@ namespace gpio {
  */
 class InputPin : public interface::InputPin<PinLevel> {
 public:
-  explicit InputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
+  explicit InputPin(std::uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
   ~InputPin() override = default;
 
 public:
   [[nodiscard]] PinLevel getLevel() const override;
-  [[nodiscard]] uint64_t getCount() const override;
-  [[nodiscard]] uint64_t getDelay() const override;
+  [[nodiscard]] std::uint32_t getCount() const override;
+  [[nodiscard]] std::uint32_t getDelay() const override;
 
 private:
   void process();
@@ -50,15 +50,15 @@ private:
   static void isr(void *arg);
 
 private:
-  uint8_t const m_numberOfPin;
+  std::uint8_t const m_numberOfPin;
   PinLevel const m_defaultLevel;
 
 private:
   PinLevel m_level;
 
 private:
-  uint64_t m_count;
-  uint64_t m_lastUpdate_InMicroseconds;
+  std::uint32_t m_count;
+  std::uint32_t m_lastUpdate_InMicroseconds;
 };
 
 }// namespace gpio

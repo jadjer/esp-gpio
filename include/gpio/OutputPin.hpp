@@ -35,14 +35,14 @@ namespace gpio {
  */
 class OutputPin : public interface::OutputPin<PinLevel> {
 public:
-  explicit OutputPin(uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
+  explicit OutputPin(std::uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
   ~OutputPin() override = default;
 
 public:
   void setLevel(PinLevel value) override;
 
 private:
-  uint8_t const m_numberOfPin;
+  std::uint8_t const m_numberOfPin;
 };
 
 }// namespace gpio

@@ -30,8 +30,8 @@ public:
 
 public:
   [[nodiscard]] virtual T getLevel() const = 0;
-  [[nodiscard]] virtual uint64_t getCount() const = 0;
-  [[nodiscard]] virtual uint64_t getDelay() const = 0;
+  [[nodiscard]] virtual std::uint32_t getCount() const = 0;
+  [[nodiscard]] virtual std::uint32_t getDelay() const = 0;
 };
 
 }
