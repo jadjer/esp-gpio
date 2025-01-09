@@ -1,4 +1,4 @@
-// Copyright 2024 Pavel Suprunov
+// Copyright 2025 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@
 
 namespace gpio {
 
-constexpr auto const MINIMAL_PULSE_DELAY_MICROSECONDS = 10000;// 0.01 sec
+auto const MINIMAL_PULSE_DELAY_MICROSECONDS = 10000;// 0.01 sec
 
-InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin),
-                                                                                  m_defaultLevel(defaultLevel),
+InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) : m_defaultLevel(defaultLevel),
+                                                                                  m_numberOfPin(numberOfPin),
                                                                                   m_level(PIN_LEVEL_UNKNOWN),
                                                                                   m_count(0),
                                                                                   m_lastUpdate_InMicroseconds(0) {
@@ -55,6 +55,10 @@ InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) 
   gpio_isr_handler_add(static_cast<gpio_num_t>(m_numberOfPin), InputPin::isr, this);
 
   process();
+}
+
+void InputPin::countReset() {
+  m_count = 0;
 }
 
 PinLevel InputPin::getLevel() const {
