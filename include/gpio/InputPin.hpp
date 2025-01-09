@@ -64,3 +64,7 @@ private:
 };
 
 }// namespace gpio
+
+#include <memory>
+
+using InputPinPtr = std::unique_ptr<gpio::InputPin>;
