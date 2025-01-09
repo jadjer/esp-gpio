@@ -1,4 +1,4 @@
-// Copyright 2024 Pavel Suprunov
+// Copyright 2025 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,15 +47,15 @@ OutputPin::OutputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel
   gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), defaultLevel);
 }
 
+void OutputPin::setLevel(PinLevel value) const {
+  gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), value);
+}
+
 PinLevel OutputPin::getLevel() const {
   auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
   auto const level = static_cast<PinLevel>(gpioLevel);
 
   return level;
-}
-
-void OutputPin::setLevel(PinLevel value) {
-  gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), value);
 }
 
 }
