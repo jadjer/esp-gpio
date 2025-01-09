@@ -1,4 +1,4 @@
-// Copyright 2024 Pavel Suprunov
+// Copyright 2025 Pavel Suprunov
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@
 #include <cstdint>
 
 #include "gpio/PinLevel.hpp"
-#include "gpio/interface/InputPin.hpp"
 
 /**
  * @namespace gpio
@@ -33,27 +32,25 @@ namespace gpio {
  * @class Pin
  * @brief
  */
-class InputPin : public interface::InputPin<PinLevel> {
+class InputPin {
 public:
   explicit InputPin(std::uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
-  ~InputPin() override = default;
+  ~InputPin() = default;
 
 public:
-  [[nodiscard]] PinLevel getLevel() const override;
-  [[nodiscard]] std::uint32_t getCount() const override;
-  [[nodiscard]] std::uint32_t getDelay() const override;
+  void countReset();
+
+public:
+  [[nodiscard]] PinLevel getLevel() const;
+  [[nodiscard]] std::uint32_t getCount() const;
+  [[nodiscard]] std::uint32_t getDelay() const;
 
 private:
   void process();
 
 private:
-  static void isr(void *arg);
-
-private:
-  std::uint8_t const m_numberOfPin;
-
-private:
   PinLevel const m_defaultLevel;
+  std::uint8_t const m_numberOfPin;
 
 private:
   PinLevel m_level;
@@ -61,6 +58,9 @@ private:
 private:
   std::uint32_t m_count;
   std::uint32_t m_lastUpdate_InMicroseconds;
+
+private:
+  static void isr(void *arg);
 };
 
 }// namespace gpio
