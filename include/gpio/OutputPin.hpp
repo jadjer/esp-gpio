@@ -48,3 +48,7 @@ private:
 };
 
 }// namespace gpio
+
+#include <memory>
+
+using OutputPinPtr = std::unique_ptr<gpio::OutputPin>;
