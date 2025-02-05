@@ -13,10 +13,6 @@
 // limitations under the License.
 //
 
-//
-// Created by jadjer on 02.10.23.
-//
-
 #pragma once
 
 namespace gpio {

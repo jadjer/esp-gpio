@@ -13,10 +13,6 @@
 // limitations under the License.
 //
 
-//
-// Created by jadjer on 30.08.22.
-//
-
 #pragma once
 
 #include <cstdint>
