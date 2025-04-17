@@ -11,40 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 
 #pragma once
 
 #include <cstdint>
 
-#include <gpio/PinLevel.hpp>
-#include <gpio/interface/OutputPin.hpp>
+namespace gpio::interface {
 
-/**
- * @namespace gpio
- */
-namespace gpio {
-
-/**
- * @class OutputPin
- * @brief
- */
-class OutputPin : public interface::OutputPin<PinLevel> {
+template <class T> class InputPin {
 public:
-  using Pin = std::uint8_t;
+  using Count = std::uint32_t;
+  using Delay = std::uint32_t;
 
 public:
-  explicit OutputPin(Pin numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
-  ~OutputPin() override = default;
+  virtual ~InputPin() = default;
 
 public:
-  [[nodiscard]] [[maybe_unused]] auto getLevel() const -> PinLevel override;
-
-public:
-  auto setLevel(PinLevel value) const -> void override;
-
-private:
-  Pin const m_numberOfPin;
+  [[nodiscard]] virtual auto getLevel() const -> T = 0;
+  [[nodiscard]] [[maybe_unused]] virtual auto getCount() const -> Count = 0;
+  [[nodiscard]] [[maybe_unused]] virtual auto getDelay() const -> Delay = 0;
 };
 
-} // namespace gpio
+} // namespace gpio::interface

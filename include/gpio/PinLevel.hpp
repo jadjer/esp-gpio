@@ -15,12 +15,10 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace gpio {
 
-enum PinLevel {
-  PIN_LEVEL_UNKNOWN = -1,
-  PIN_LEVEL_LOW = 0,
-  PIN_LEVEL_HIGH = 1
-};
+enum PinLevel : std::int8_t { PIN_LEVEL_UNKNOWN = -1, PIN_LEVEL_LOW = 0, PIN_LEVEL_HIGH = 1 };
 
-}
+} // namespace gpio

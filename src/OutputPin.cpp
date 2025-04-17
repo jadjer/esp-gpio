@@ -15,16 +15,16 @@
 
 #include "gpio/OutputPin.hpp"
 
-#include <cassert>
-
 #include <driver/gpio.h>
+
+#include "gpio/PinLevel.hpp"
 
 namespace gpio {
 
-OutputPin::OutputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin) {
+OutputPin::OutputPin(Pin const numberOfPin, PinLevel const defaultLevel) : m_numberOfPin(numberOfPin) {
 
-  assert(PIN_LEVEL_LOW == 0);
-  assert(PIN_LEVEL_HIGH == 1);
+  static_assert(PIN_LEVEL_LOW == 0);
+  static_assert(PIN_LEVEL_HIGH == 1);
 
   gpio_config_t gpioConfig = {
       .pin_bit_mask = (1ull << m_numberOfPin),
@@ -43,15 +43,13 @@ OutputPin::OutputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel
   gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), defaultLevel);
 }
 
-void OutputPin::setLevel(PinLevel value) const {
-  gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), value);
-}
+auto OutputPin::setLevel(PinLevel value) const -> void { gpio_set_level(static_cast<gpio_num_t>(m_numberOfPin), value); }
 
-PinLevel OutputPin::getLevel() const {
+auto OutputPin::getLevel() const -> PinLevel {
   auto const gpioLevel = gpio_get_level(static_cast<gpio_num_t>(m_numberOfPin));
   auto const level = static_cast<PinLevel>(gpioLevel);
 
   return level;
 }
 
-}
+} // namespace gpio

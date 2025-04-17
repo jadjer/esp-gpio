@@ -11,13 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 
 #pragma once
 
 #include <cstdint>
 
-#include "gpio/PinLevel.hpp"
+#include <gpio/PinLevel.hpp>
+#include <gpio/interface/InputPin.hpp>
 
 /**
  * @namespace gpio
@@ -25,42 +25,42 @@
 namespace gpio {
 
 /**
- * @class Pin
+ * @class InputPin
  * @brief
  */
-class InputPin {
+class InputPin : public interface::InputPin<PinLevel> {
 public:
-  explicit InputPin(std::uint8_t numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
-  ~InputPin() = default;
+  using Pin = std::uint8_t;
+  using Time = std::int64_t;
 
 public:
-  void countReset();
+  explicit InputPin(Pin numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
+  ~InputPin() override = default;
 
 public:
-  [[nodiscard]] PinLevel getLevel() const;
-  [[nodiscard]] std::uint32_t getCount() const;
-  [[nodiscard]] std::uint32_t getDelay() const;
+  [[nodiscard]] auto getLevel() const -> PinLevel override;
+  [[nodiscard]] [[maybe_unused]] auto getCount() const -> Count override;
+  [[nodiscard]] [[maybe_unused]] auto getDelay() const -> Delay override;
+
+public:
+  [[maybe_unused]] auto countReset() -> void;
 
 private:
-  void process();
+  auto process() -> void;
 
 private:
+  Pin const m_numberOfPin;
   PinLevel const m_defaultLevel;
-  std::uint8_t const m_numberOfPin;
 
 private:
   PinLevel m_level;
 
 private:
-  std::uint32_t m_count;
-  std::uint32_t m_lastUpdate_InMicroseconds;
+  Count m_count;
+  Time m_lastUpdate;
 
 private:
   static void isr(void *arg);
 };
 
-}// namespace gpio
-
-#include <memory>
-
-using InputPinPtr = std::unique_ptr<gpio::InputPin>;
+} // namespace gpio

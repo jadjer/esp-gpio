@@ -15,23 +15,20 @@
 
 #include "gpio/InputPin.hpp"
 
-#include <cassert>
-
 #include <driver/gpio.h>
 #include <esp_timer.h>
 
+#include "gpio/PinLevel.hpp"
+
 namespace gpio {
 
-auto const MINIMAL_PULSE_DELAY_MICROSECONDS = 10000;// 0.01 sec
+auto const MINIMAL_PULSE_DELAY_MICROSECONDS = 10000; // 0.01 sec
 
-InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) : m_defaultLevel(defaultLevel),
-                                                                                  m_numberOfPin(numberOfPin),
-                                                                                  m_level(PIN_LEVEL_UNKNOWN),
-                                                                                  m_count(0),
-                                                                                  m_lastUpdate_InMicroseconds(0) {
+InputPin::InputPin(InputPin::Pin const numberOfPin, PinLevel const defaultLevel)
+    : m_numberOfPin(numberOfPin), m_defaultLevel(defaultLevel), m_level(PIN_LEVEL_UNKNOWN), m_count(0), m_lastUpdate(0) {
 
-  assert(PIN_LEVEL_LOW == 0);
-  assert(PIN_LEVEL_HIGH == 1);
+  static_assert(PIN_LEVEL_LOW == 0);
+  static_assert(PIN_LEVEL_HIGH == 1);
 
   gpio_config_t gpioConfig = {
       .pin_bit_mask = (1ull << m_numberOfPin),
@@ -53,28 +50,22 @@ InputPin::InputPin(std::uint8_t const numberOfPin, PinLevel const defaultLevel) 
   process();
 }
 
-void InputPin::countReset() {
-  m_count = 0;
-}
+[[maybe_unused]] void InputPin::countReset() { m_count = 0; }
 
-PinLevel InputPin::getLevel() const {
-  return m_level;
-}
+auto InputPin::getLevel() const -> PinLevel { return m_level; }
 
-std::uint32_t InputPin::getCount() const {
-  return m_count;
-}
+auto InputPin::getCount() const -> Count { return m_count; }
 
-std::uint32_t InputPin::getDelay() const {
+auto InputPin::getDelay() const -> Delay {
   auto const currentTime_InMicroseconds = esp_timer_get_time();
-  auto const delay_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate_InMicroseconds;
+  auto const delay_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate;
 
   return delay_InMicroseconds;
 }
 
-void InputPin::process() {
+auto InputPin::process() -> void {
   auto const currentTime_InMicroseconds = esp_timer_get_time();
-  auto const diffTime_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate_InMicroseconds;
+  auto const diffTime_InMicroseconds = currentTime_InMicroseconds - m_lastUpdate;
 
   if (diffTime_InMicroseconds <= MINIMAL_PULSE_DELAY_MICROSECONDS) {
     return;
@@ -88,13 +79,13 @@ void InputPin::process() {
   }
 
   m_count += 1;
-  m_lastUpdate_InMicroseconds = currentTime_InMicroseconds;
+  m_lastUpdate = currentTime_InMicroseconds;
 }
 
-void InputPin::isr(void *arg) {
-  auto const inputPin = static_cast<InputPin *>(arg);
+auto InputPin::isr(void *arg) -> void {
+  auto *const self = static_cast<InputPin *>(arg);
 
-  inputPin->process();
+  self->process();
 }
 
-}// namespace gpio
+} // namespace gpio
