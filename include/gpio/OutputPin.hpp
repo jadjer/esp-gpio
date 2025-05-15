@@ -16,6 +16,8 @@
 #pragma once
 
 #include <cstdint>
+#include <expected>
+#include <memory>
 
 #include <gpio/PinLevel.hpp>
 #include <gpio/interface/OutputPin.hpp>
@@ -31,11 +33,23 @@ namespace gpio {
  */
 class OutputPin : public interface::OutputPin<PinLevel> {
 public:
-  using Pin = std::uint8_t;
+  enum class Error : std::uint8_t {
+    CONFIGURATION_PIN_FAILED,
+  };
 
 public:
-  explicit OutputPin(Pin numberOfPin, PinLevel defaultLevel = PIN_LEVEL_LOW);
-  ~OutputPin() override = default;
+  using Pin = std::uint8_t;
+  using Pointer = std::unique_ptr<OutputPin>;
+
+public:
+  static auto create(Pin numberOfPin) noexcept -> std::expected<Pointer, Error>;
+  static auto create(Pin numberOfPin, PinLevel defaultLevel) noexcept -> std::expected<Pointer, Error>;
+
+private:
+  explicit OutputPin(Pin numberOfPin) noexcept;
+
+public:
+  ~OutputPin() noexcept override = default;
 
 public:
   [[nodiscard]] [[maybe_unused]] auto getLevel() const -> PinLevel override;

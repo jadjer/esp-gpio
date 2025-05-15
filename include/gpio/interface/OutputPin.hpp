@@ -16,9 +16,9 @@
 
 namespace gpio::interface {
 
-template <class T> class OutputPin {
+template <typename T> class OutputPin {
 public:
-  virtual ~OutputPin() = default;
+  virtual ~OutputPin() noexcept = default;
 
 public:
   [[nodiscard]] [[maybe_unused]] virtual auto getLevel() const -> T = 0;

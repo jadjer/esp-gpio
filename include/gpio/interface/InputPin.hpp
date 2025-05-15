@@ -18,13 +18,13 @@
 
 namespace gpio::interface {
 
-template <class T> class InputPin {
+template <typename T> class InputPin {
 public:
   using Count = std::uint32_t;
   using Delay = std::uint32_t;
 
 public:
-  virtual ~InputPin() = default;
+  virtual ~InputPin() noexcept = default;
 
 public:
   [[nodiscard]] virtual auto getLevel() const -> T = 0;

@@ -19,6 +19,6 @@
 
 namespace gpio {
 
-enum PinLevel : std::int8_t { PIN_LEVEL_UNKNOWN = -1, PIN_LEVEL_LOW = 0, PIN_LEVEL_HIGH = 1 };
+enum class PinLevel : std::int8_t { UNKNOWN = -1, LOW = 0, HIGH = 1 };
 
 } // namespace gpio
